@@ -1,20 +1,20 @@
 const Ratio = 2;
+///////////////////////////////////////////////////////////////////////////
 let view, Canvas, DrawPoint;
-
+let DrawSizeMax, DrawSizeMin, DrawSizeLink;
+///////////////////////////////////////////////////////////////////////////
+let Curve = 0.5;
+let DrawColor = '#000000';
+let Point0, Point0_0, Point0_1;
+///////////////////////////////////////////////////////////////////////////
 $(function () {
   view = $('#canvas');
   const {offsetWidth, offsetHeight} = view;
   view.setAttribute('width', offsetWidth * Ratio + 'px');
   view.setAttribute('height', offsetHeight * Ratio + 'px');
   Canvas = view.getContext('2d');
-  DrawPoint = (context => function (point, size, func = undefined) {
-    context.beginPath();
-    context.arc(point.x, point.y, size, 0, 2 * Math.PI, true)
-    context.fillStyle = '#000'
-    if (func) func(context)
-    context.fill()
-    context.closePath();
-  })(Canvas);
+  setSize(5)
+  serCtx(Canvas)
   /*  方法监听  */
   // 按下
   view.addEventListener('mousedown', startFunc);
@@ -22,19 +22,47 @@ $(function () {
   view.addEventListener('mouseout', exitFunc);
   // 弹起
   view.addEventListener('mouseup', exitFunc);
+  ///////////////////////////////////////////////////////////////////////////
+  $('.tabBar-list > .color').onchange = function ({target: {value: color}}) {
+    DrawColor = color
+  }
+  $('.tabBar-list > .curve').onchange = function ({target}) {
+    let v = parseFloat(target.value)
+    v = SizeLimit(isNaN(v) ? Curve : v, 0.5, 0.1)
+    target.value = v.toString()
+    Curve = v
+  }
+  $('.tabBar-list > .size').onchange = function ({target}) {
+    let v = parseFloat(target.value)
+    v = SizeLimit(v, Infinity, 0.3)
+    target.value = v.toString()
+    setSize(v)
+  }
 })
-// 曲线优化 0 -> 0.5, 最好 0.5
-let Curve = 0.5
-let FuncState = false
-let Point0, Point0_0, Point0_1;
-// 测试最低 0.3
-const DrawSizeMin = 0.3
-const DrawSizeMax = SizeLimit(5, Infinity, DrawSizeMin)
-
-let DrawSize = s => SizeLimit(isNaN(s) ? 0 : s, DrawSizeMax, DrawSizeMin)
-let DrawSizeLink = DrawSizeMax
 
 ////////////////////////////////////////////////////////////////////
+function setSize (size) {
+  DrawSizeMax = size
+  DrawSizeMin = SizeLimit(DrawSizeMax / DrawSizeMax / 2, Infinity, 0.3)
+  DrawSizeLink = DrawSizeMax
+}
+
+function serCtx (context) {
+  DrawPoint = function (point, size, func = undefined) {
+    context.beginPath();
+    context.arc(point.x, point.y, size, 0, 2 * Math.PI, true)
+    context.fillStyle = DrawColor
+    if (func) func(context)
+    context.fill()
+    context.closePath();
+  }
+}
+
+function DrawSize (s) {
+  return SizeLimit(isNaN(s) ? 0 : s, DrawSizeMax, DrawSizeMin)
+}
+
+///////////////////////////////////////////////////////////////////////////
 function DrawPointLine (p0, p1, s) {
   const count = firstOrderGenerate(p0, p1)
   const hasSize = DrawSizeLink
@@ -55,6 +83,7 @@ function DrawPointCurve (p0, p1, p2, s) {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////
 function toPoint ({layerY, layerX}) {
   return {
     t: new Date().getTime(),
@@ -62,6 +91,9 @@ function toPoint ({layerY, layerX}) {
     x: SizeLimit(layerX * Ratio, Infinity, 0)
   }
 }
+
+///////////////////////////////////////////////////////////////////////////
+let FuncState = false
 
 function startFunc (event) {
   AddPoint(event)
@@ -79,22 +111,20 @@ function exitFunc (event) {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////
 const throttleTimeout = 10
 const moveFunc = Throttle(AddPoint, throttleTimeout)
 
-/**
- * 不知道用什么表达
- */
+///////////////////////////////////////////////////////////////////////////
 function AddPoint (event) {
   const p1 = toPoint(event);
   if (!Point0) {
     DrawPoint(p1, DrawSizeMin);
   } else {
     ////////////////////////////// 是我太菜了，暂不知道用什么计算
-    const distance = firstOrderGenerate(Point0, p1) / Ratio;
+    const distance = firstOrderGenerate(Point0, p1);
     let difS = distance / 100
-    console.log(difS, distance)
-    difS = SizeLimit(difS > 1 ? -difS * 2 : difS, Infinity, -(DrawSizeMax / (DrawSizeMax / Ratio)))
+    difS = SizeLimit(difS > 1 ? -difS * 2 : difS, Infinity, -(DrawSizeMax / DrawSizeMax))
     ////////////////////////////// 是我太菜了，暂不知道用什么计算
     const p0_1 = firstOrder(Point0, p1, 1 - Curve);
     const p0_0 = Curve === 0.5 ? p0_1 : firstOrder(Point0, p1, Curve);

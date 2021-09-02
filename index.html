@@ -11,7 +11,20 @@
 </head>
 <body>
 <div id="App">
-    <header class="tabBar"></header>
+    <header class="tabBar">
+        <label class="tabBar-list">
+            <span>曲线优化</span>
+            <input class="curve" type="text" value="0.5" placeholder="曲线优化"/>
+        </label>
+        <label class="tabBar-list">
+            <span>笔画大小</span>
+            <input class="size" type="text" value="5" placeholder="笔画大小"/>
+        </label>
+        <label class="tabBar-list">
+            <span>笔画颜色</span>
+            <input class="color" type="color" value="#000000" placeholder="笔画颜色" style="padding: 0 2px; width: 30px;"/>
+        </label>
+    </header>
     <main class="content">
         <canvas id="canvas"><!-- 画板 --></canvas>
     </main>
