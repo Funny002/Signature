@@ -18,17 +18,17 @@ export function mergeOptions<T = any>(...options: any[]): T {
 }
 
 // 节流 - 采用异步的方式
-export function Throttle<T extends (...args: any[]) => void>(func: T, delay: number) {
+export function throttle<T extends (...args: any[]) => void>(func: T, delay: number) {
   let state = false;
   return function (...args: any[]): void {
     if (state) return;
     state = true;
-    func(args);
+    func(...args);
     setTimeout(() => state = false, delay);
   };
 }
 
 // 限制一个数在合理的范围
-export function LimitToRange(num: number, min = 0, max = 1): number {
+export function limitToRange(num: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(num, max));
 }

@@ -1,5 +1,4 @@
-import type { Point } from '@signature/types';
-import { Throttle } from '@utils';
+import { throttle } from './utils';
 
 export class CursorMoveEvent {
   private isDrawing: boolean = false;
@@ -10,7 +9,7 @@ export class CursorMoveEvent {
     document.addEventListener('mouseout', this.onMouseOut.bind(this));
     document.addEventListener('mousemove', this.onMouseMove.bind(this));
     document.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.handleThrottle = Throttle(this.handleMouseMove.bind(this), delay);
+    this.handleThrottle = throttle((...args: ['set' | 'end', Point]) => this.handleMouseMove(...args), delay);
   }
 
   // 光标移动

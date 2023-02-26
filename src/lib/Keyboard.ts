@@ -1,6 +1,4 @@
-const keyMap = ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'];
-
-class Keyboard {
+export class Keyboard {
   private shortcuts: { [shortcut: string]: Function } = {};
   private shortcutKey: { [key: string]: boolean } = {};
 
@@ -39,7 +37,7 @@ class Keyboard {
 
   // 按键检测
   private isSupportedKey(key: string): boolean {
-    return keyMap.indexOf(key) !== -1 || !key.match(/^Key/);
+    return ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].indexOf(key) !== -1 || !key.match(/^Key/);
   }
 
   // 获取按键

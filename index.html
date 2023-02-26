@@ -1,34 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>Signature</title>
-    <script src="./js/bessel.js"></script>
-    <script src="./js/__base.js"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" content="🖊" href="./image/icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  <meta charset="UTF-8">
+  <title>Signature</title>
+  <link rel="shortcut icon" content="🖊" href="./image/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 </head>
 <body>
-<div id="App">
-    <header class="tabBar">
-        <label class="tabBar-list">
-            <span>曲线优化</span>
-            <input class="curve" type="text" value="0.5" placeholder="曲线优化"/>
-        </label>
-        <label class="tabBar-list">
-            <span>笔画大小</span>
-            <input class="size" type="text" value="5" placeholder="笔画大小"/>
-        </label>
-        <label class="tabBar-list">
-            <span>笔画颜色</span>
-            <input class="color" type="color" value="#000000" placeholder="笔画颜色" style="padding: 0 2px; width: 30px;"/>
-        </label>
-    </header>
-    <main class="content">
-        <canvas id="canvas"><!-- 画板 --></canvas>
-    </main>
+<div class="app">
+  <header class="app-header"></header>
+  <canvas class="app-canvas" id="canvas"></canvas>
 </div>
+<script type="module" src="./src/example.ts"></script>
 </body>
-<script src="./js/main.js"></script>
 </html>

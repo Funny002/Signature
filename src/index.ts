@@ -1,24 +1,23 @@
-import { Layer, CreateCanvasOptions, Point } from '@signature/types';
-import { CursorMoveEvent } from '@signature/CursorMoveEvent';
-import { LimitToRange, mergeOptions } from '@utils';
+import { limitToRange, mergeOptions } from './utils';
+import { CursorMoveEvent } from './CursorMoveEvent';
 
 export class CreateCanvas extends CursorMoveEvent {
   private readonly ratio: number;
   private readonly doc: HTMLCanvasElement;
   private readonly opt: CreateCanvasOptions;
-  // 当前笔画
-  private readonly layer: Layer = [];
-  // 历史笔画
-  private readonly layers: Layer[] = [];
+  private readonly layer: Point[] = []; // 当前笔画
+  private readonly layers: CanvasLayers[] = []; // 历史笔画
 
   // 初始化
   constructor(document: HTMLCanvasElement, options?: Partial<CreateCanvasOptions>) {
-    const opt = mergeOptions<CreateCanvasOptions>({ delay: 500 }, options);
+    const opt = mergeOptions<CreateCanvasOptions>({ delay: 100 }, options);
     super(document, opt.delay);
     this.opt = opt;
     this.doc = document;
-    this.ratio = LimitToRange(window.devicePixelRatio, 2, Infinity);
-    //
+    this.ratio = limitToRange(window.devicePixelRatio, 2, Infinity);
+    // 初始化画布
+    this.onResize();
+    // 监听画布
     this.doc.addEventListener('resize', this.onResize.bind(this));
   }
 
@@ -33,7 +32,6 @@ export class CreateCanvas extends CursorMoveEvent {
 
   // 重新渲染画布
   private renderCanvas() {
-
   }
 
   // 画布调整
@@ -44,6 +42,14 @@ export class CreateCanvas extends CursorMoveEvent {
 
   // CursorMoveEvent 封装后必须实现的方法
   protected handleMouseMove(keys: 'set' | 'end', point?: Point) {
-    //
+    console.log('handleMouseMove', keys, point);
+  }
+
+  // 重做
+  public redo() {
+  }
+
+  // 回退
+  public undo() {
   }
 }

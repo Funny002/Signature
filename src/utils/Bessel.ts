@@ -1,5 +1,3 @@
-type Point = [number, number];
-
 // 计算方法
 export function calculateCoefficients(n: number, t: number): number[] {
   const result = new Array(n + 1);

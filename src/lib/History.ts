@@ -1,10 +1,8 @@
-export type Action = { type: string, payload?: any };
-
-export class History {
-  private stack: Action[] = [];
+export class History<T extends { type: string, payload?: any }> {
+  private stack: T[] = [];
   private current: number = -1;
   private maxStackSize: number = 10;
-  private listeners: ((stack: Action[], current: number) => void)[] = [];
+  private listeners: ((stack: T[], current: number) => void)[] = [];
 
   // 初始化
   constructor(maxSize?: number) {
@@ -12,7 +10,7 @@ export class History {
   }
 
   // 添加动作
-  public addAction(action: Action): void {
+  public addAction(action: T): void {
     this.stack.splice(this.current + 1);
     this.stack.push(action);
     this.current++;
@@ -57,12 +55,12 @@ export class History {
   }
 
   // 添加监听器
-  public addListener(listener: (stack: Action[], current: number) => void): void {
+  public addListener(listener: (stack: T[], current: number) => void): void {
     this.listeners.push(listener);
   }
 
   // 移除监听器
-  public removeListener(listener: (stack: Action[], current: number) => void): void {
+  public removeListener(listener: (stack: T[], current: number) => void): void {
     const index = this.listeners.indexOf(listener);
     if (index !== -1) {
       this.listeners.splice(index, 1);
@@ -71,7 +69,7 @@ export class History {
 
   // 自定义动作
   public customAction(payload?: any): void {
-    const action: Action = { type: 'custom', payload };
+    const action = { type: 'custom', payload } as T;
     this.addAction(action);
   }
 

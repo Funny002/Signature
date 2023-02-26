@@ -3,7 +3,9 @@
   "version": "2.0.0",
   "description": "这是一个简单的画布，但它的名字叫签名",
   "scripts": {
-    "serve": "serve ./"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -12,14 +14,14 @@
   "keywords": [
     "Signature"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Funny002<dsufunny@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Funny002/Signature/issues"
   },
   "homepage": "https://github.com/Funny002/Signature#readme",
-  "dependencies": {
-    "serve": "^12.0.0",
-    "typescript": "^4.9.5"
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
   }
 }
