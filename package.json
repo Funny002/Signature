@@ -1,7 +1,7 @@
 {
   "name": "signature",
-  "version": "0.0.1",
-  "description": "test",
+  "version": "2.0.0",
+  "description": "这是一个简单的画布，但它的名字叫签名",
   "scripts": {
     "serve": "serve ./"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Funny002/Signature#readme",
   "dependencies": {
-    "serve": "^12.0.0"
+    "serve": "^12.0.0",
+    "typescript": "^4.9.5"
   }
 }
