@@ -1,6 +1,6 @@
 // 配置项合并
-export function mergeOptions<T = any>(...options: any[]): T {
-  const result: any = {};
+export function mergeOptions<T = any>(defaultOptions: T, ...options: any[]): T {
+  const result: any = defaultOptions;
   for (const option of options) {
     if (typeof option === 'object' && option !== null) {
       for (const key of Object.keys(option)) {

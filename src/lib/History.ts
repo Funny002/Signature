@@ -21,20 +21,22 @@ export class History<T extends { type: string, payload?: any }> {
     this.emitChange();
   }
 
+  // 获取全部栈
+  public getAllStack(): T[] {
+    if (this.current < 0) return [];
+    return this.stack.slice(0, this.current + 1);
+  };
+
   // 撤销
   public undo(): void {
-    if (this.current < 0) {
-      return;
-    }
+    if (!this.canUndo()) return;
     this.current--;
     this.emitChange();
   }
 
   // 重做
   public redo(): void {
-    if (this.current >= this.stack.length - 1) {
-      return;
-    }
+    if (!this.canRedo()) return;
     this.current++;
     this.emitChange();
   }

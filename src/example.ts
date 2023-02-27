@@ -1,6 +1,5 @@
-import { CreateCanvas } from './index';
+import { Message } from './lib/Message';
 
-
-const canvas = new CreateCanvas(document.querySelector('canvas') as HTMLCanvasElement);
-// CreateCanvas()
-console.log('哈哈哈', canvas);
+const message = new Message('xxx', 'warning');
+message.send('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+message.warn('aaaaaaaaaaaaa');

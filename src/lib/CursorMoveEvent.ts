@@ -1,4 +1,4 @@
-import { throttle } from './utils';
+import { throttle } from '../utils';
 
 export class CursorMoveEvent {
   private isDrawing: boolean = false;
