@@ -32,3 +32,28 @@ export function throttle<T extends (...args: any[]) => void>(func: T, delay: num
 export function limitToRange(num: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(num, max));
 }
+
+
+export function createCanvas(width: number, height: number, ratio: number, absolute?: boolean) {
+  const canvas = document.createElement('canvas');
+  // 外观大小
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  canvas.style.pointerEvents = 'none'; // 画布穿透
+  if (absolute) {
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.position = 'absolute';
+  }
+  // 输出
+  return canvas;
+}
+
+// 要求适用div作为容器包裹画布
+export function handleDivElement(element: HTMLDivElement | string): HTMLDivElement | null {
+  let dom = typeof element === 'string' ? document.querySelector(element) as HTMLDivElement : element;
+  if (dom.tagName === 'DiV') return dom;
+  return null;
+}
