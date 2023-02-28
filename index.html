@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <title>Signature</title>
-  <link rel="shortcut icon" content="🖊" href="./image/icon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-</head>
-<body>
-<div class="app">
-  <header class="app-header"></header>
-  <canvas class="app-canvas" id="canvas"></canvas>
-</div>
-<script type="module" src="./src/example.ts"></script>
-</body>
+ <head>
+   <meta charset="UTF-8">
+   <title>Signature</title>
+   <link rel="stylesheet" type="text/css" href="/css/style.css">
+   <link rel="shortcut icon" content="🖊" href="/image/icon.png">
+   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+ </head>
+ <body>
+  <div class="app">
+    <header class="app-header">
+      <span>画笔颜色</span>
+      <label for="color">
+        <input type="color" id="color" value="#000000"/>
+      </label>
+      <span>画笔大小</span>
+      <label for="size">
+        <input type="number" id="size" step="1" min="1" max="1000" value="1" placeholder="1 - 1000"/>
+      </label>
+      <span>画笔融化</span>
+      <label for="soften">
+        <input type="number" id="soften" step="1" max="100" min="0" value="0" placeholder="0 - 100"/>
+      </label>
+      <span>曲线优化</span>
+      <label for="optimize">
+        <input type="number" id="optimize" step="1" max="10" min="1" value="5" placeholder="1 - 10"/>
+      </label>
+      <span style="margin: 0 auto"></span>
+      <input type="button" value="提交"/>
+    </header>
+    <div class="app-canvas"></div>
+  </div>
+ </body>
+ <script type="module" src="./src/example.ts"></script>
 </html>

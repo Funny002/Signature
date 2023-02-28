@@ -10,7 +10,7 @@ export class Keyboard {
 
   // 绑定
   public bind(shortcut: string, callback: Function): void {
-    this.shortcuts[shortcut] = callback;
+    this.shortcuts[shortcut.split('+').sort().join('+')] = callback;
   }
 
   // 键盘按下
@@ -21,6 +21,7 @@ export class Keyboard {
     const shortcut = this.getPressedShortcut();
     if (shortcut && this.shortcuts[shortcut]) {
       event.preventDefault();
+      this.shortcuts[shortcut]();
     }
   }
 
@@ -29,15 +30,11 @@ export class Keyboard {
     if (this.isSupportedKey(event.code)) {
       this.shortcutKey[event.code] = false;
     }
-    const shortcut = this.getPressedShortcut();
-    if (shortcut && this.shortcuts[shortcut]) {
-      this.shortcuts[shortcut]();
-    }
   }
 
   // 按键检测
   private isSupportedKey(key: string): boolean {
-    return ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].indexOf(key) !== -1 || !key.match(/^Key/);
+    return ['ControlLeft', 'ControlRight', 'ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight'].indexOf(key) !== -1 || !!key.match(/^Key/);
   }
 
   // 获取按键

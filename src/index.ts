@@ -28,11 +28,24 @@ export class CreateCanvas {
     this.canvas = createCanvas(offsetWidth, offsetHeight, this.opt.ratio, true);
     this.divDom.append(this.canvasBackdrop, this.canvas);
     //
-    this.cursorMoveEvent = new CursorMoveEvent(this.divDom, this.handleMoveEvent.bind(this));
+    this.cursorMoveEvent = new CursorMoveEvent(this.divDom, this.handleMoveEvent.bind(this), this.opt.delay);
   }
 
-  handleMoveEvent(keys: 'set' | 'end', point?: Point) {
+  private handleMoveEvent(keys: 'set' | 'end', point?: Point) {
+    if (keys === 'end') {
+      // 结束绘画
+    } else {
+      // 开始绘画
+    }
     console.log(keys, point);
+  }
+
+  public undo() {
+    console.log('undo');
+  }
+
+  public redo() {
+    console.log('redo');
   }
 
   private handleOptions(option: Partial<CreateCanvasOptions>) {
@@ -65,6 +78,9 @@ export class CreateCanvas {
       this.error.warn('数值过大可能影响用户体验');
     }
     this.opt.delay = value;
+    if (this.cursorMoveEvent) {
+      this.cursorMoveEvent.setDelay = value;
+    }
   }
 
   get soften() {

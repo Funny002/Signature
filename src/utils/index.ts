@@ -53,7 +53,7 @@ export function createCanvas(width: number, height: number, ratio: number, absol
 
 // 要求适用div作为容器包裹画布
 export function handleDivElement(element: HTMLDivElement | string): HTMLDivElement | null {
-  let dom = typeof element === 'string' ? document.querySelector(element) as HTMLDivElement : element;
-  if (dom.tagName === 'DiV') return dom;
+  const dom = typeof element === 'string' ? document.querySelector(element) as HTMLDivElement : element;
+  if (dom.tagName.toLowerCase() === 'div') return dom;
   return null;
 }

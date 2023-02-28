@@ -15,4 +15,4 @@ interface CreateCanvasOptions {
   distance: number; // 两个点的距离大于才记录
 }
 
-type CursorMoveEventHandle = (key:"set"|"end",point?:Point)=>void
+type CursorMoveEventHandle = (key: 'set' | 'end', point?: Point) => void
