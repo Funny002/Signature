@@ -1,18 +1,31 @@
 /// <reference types="vite/client" />
 
-type Point = [number, number];
+type Point = number[];
 type MessageLevel = 'warning' | 'error' | 'off';
 type CanvasLayers = { point: Layer, image: string }
 
-interface CreateCanvasOptions {
-  size: number; // 画笔大小
+interface CanvasLayerOptions {
+  // 画笔大小
+  size: number;
+  // 画笔颜色
+  color: string;
+  // 画布像素位
+  ratio: number;
+  // 画笔软化
+  soften: number;
+  // 最大栈
+  maxStack: number;
+  // 曲线优化
+  optimize: number;
+}
+
+interface CursorMoveEventOptions {
   delay: number; // 节流
-  color: string; // 画笔颜色
-  ratio: number; // 画布像素位
-  soften: number; // 画笔软化
-  maxStack: number; // 最大栈
-  optimize: number; // 曲线优化
   distance: number; // 两个点的距离大于才记录
 }
 
-type CursorMoveEventHandle = (key: 'set' | 'end', point?: Point) => void
+interface CreateCanvasOptions extends CanvasLayerOptions, CursorMoveEventOptions {
+  // 空壳
+}
+
+type CursorMoveEventHandle = (key: 'set' | 'end', point: Point) => void

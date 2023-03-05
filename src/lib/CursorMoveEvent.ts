@@ -1,25 +1,48 @@
 import { throttle } from '../utils';
+import { getPointDistance } from '../utils/Bessel';
+import { CanvasLayer } from './CanvasLayer';
 
 export class CursorMoveEvent {
+  private current?: Point;
+  private __distance: number;
   private readonly handleFunc: any;
   private readonly dom: HTMLElement;
   private isDrawing: boolean = false;
   private handleThrottleFunc: (...args: any[]) => void;
 
   // 初始化
-  constructor(doc: HTMLElement, handle: CursorMoveEventHandle, delay: number) {
+  constructor(doc: HTMLElement, canvasLayer: CanvasLayer, options: CursorMoveEventOptions) {
     this.dom = doc;
-    this.handleFunc = handle;
+    this.__distance = options.distance;
+    this.handleFunc = canvasLayer.handleMoveEvent.bind(canvasLayer);
     doc.addEventListener('mouseup', this.onMouseUp.bind(this));
     doc.addEventListener('mouseout', this.onMouseOut.bind(this));
     doc.addEventListener('mousemove', this.onMouseMove.bind(this));
     doc.addEventListener('mousedown', this.onMouseDown.bind(this));
-    this.handleThrottleFunc = throttle((...args: ['set' | 'end', Point]) => handle(...args), delay);
+    this.handleThrottleFunc = throttle(this.handlePointFunc.bind(this), options.delay);
+  }
+
+  set distance(value: number) {
+    this.__distance = value;
   }
 
   // 调整节流
-  set setDelay(value: number) {
-    this.handleThrottleFunc = throttle((...args: ['set' | 'end', Point]) => this.handleFunc(...args), value);
+  set delay(value: number) {
+    this.handleThrottleFunc = throttle(this.handlePointFunc.bind(this), value);
+  }
+
+  private handlePointFunc(keys: 'set' | 'end', point: Point) {
+    if (keys === 'end') {
+      this.handleFunc('end', []);
+    } else {
+      // 过滤掉太近的坐标
+      const { current, __distance } = this;
+      const t = current ? getPointDistance(current, point) : Infinity;
+      if (t > __distance) {
+        this.current = point;
+        this.handleFunc('set', point);
+      }
+    }
   }
 
   // 卸载监听器
@@ -48,7 +71,7 @@ export class CursorMoveEvent {
   // 松开鼠标左键
   private onMouseUp(e: MouseEvent) {
     if (e.button === 0) { // 检查是否是左键
-      this.handleFunc('end');
+      this.handleFunc('end', []);
       this.isDrawing = false;
     }
   }
@@ -56,7 +79,7 @@ export class CursorMoveEvent {
   // 光标移出画布
   private onMouseOut() {
     if (this.isDrawing) {
-      this.handleFunc('end');
+      this.handleFunc('end', []);
       this.isDrawing = false;
     }
   }

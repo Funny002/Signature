@@ -1,17 +1,56 @@
 import { Keyboard } from './lib/Keyboard';
 import { CreateCanvas } from './index';
+import { limitToRange } from './utils';
+
+const $ = (element: string) => document.querySelector(element) as HTMLInputElement;
 
 // 绑定快捷键
 const keyboard = new Keyboard(window.document.body);
 
 // 初始化画布
-const canvas = new CreateCanvas('.app-canvas', { delay: 100 });
+const canvas = new CreateCanvas('.app-canvas', { delay: 10 });
 
 // 快捷键 - 撤销
 keyboard.bind('ControlLeft+KeyZ', () => canvas.undo());
 
 // 快捷键 - 重做
 keyboard.bind('ControlLeft+ShiftLeft+KeyZ', () => canvas.redo());
+
+function handleValue(func: (value: string, target: HTMLInputElement) => void) {
+  return function (e: any) {
+    func(e.target.value, e.target);
+  };
+}
+
+$('#color').onchange = handleValue((color, target) => {
+  canvas.color = color || '#000000';
+  target.value = canvas.color;
+});
+
+$('#size').onchange = handleValue((value, target) => {
+  canvas.size = limitToRange(parseInt(value), 1, 1000);
+  target.value = canvas.size.toString();
+});
+
+$('#soften').onchange = handleValue((value, target) => {
+  const soften = limitToRange(parseInt(value), 1, 100);
+  target.value = soften.toString();
+  canvas.soften = soften * 0.01;
+});
+
+$('#optimize').onchange = handleValue((value, target) => {
+  const optimize = limitToRange(parseInt(value), 1, 9);
+  target.value = optimize.toString();
+  canvas.optimize = optimize * 0.1;
+});
+
+window.addEventListener('load', function () {
+  const { color, size, soften, optimize } = canvas;
+  $('#color').value = color;
+  $('#size').value = size.toString();
+  $('#soften').value = (soften * 100).toString();
+  $('#optimize').value = (optimize * 10).toString();
+});
 
 /***
  * 曲线优化

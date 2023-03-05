@@ -1,43 +1,27 @@
-import { Message } from './lib/Message';
-import { createCanvas, handleDivElement, limitToRange } from './utils';
+import { handleDivElement, limitToRange } from './utils';
 import { CursorMoveEvent } from './lib/CursorMoveEvent';
+import { CanvasLayer } from './lib/CanvasLayer';
+import { Message } from './lib/Message';
 
 const defaultOptions: CreateCanvasOptions = { maxStack: 10, size: 2, delay: 30, soften: 0, distance: 10, optimize: 0.5, color: '#000000', ratio: window.devicePixelRatio };
 
 export class CreateCanvas {
+  private opt = defaultOptions;
   private readonly error = new Message();
-  private opt: CreateCanvasOptions = defaultOptions;
-  // 画布
-  private readonly divDom: HTMLDivElement;
-  private readonly canvas: HTMLCanvasElement;
-  private readonly canvasBackdrop: HTMLCanvasElement;
-  //
+  private readonly canvasLayers: CanvasLayer;
   private readonly cursorMoveEvent: CursorMoveEvent;
 
   constructor(element: string | HTMLDivElement, option?: Partial<CreateCanvasOptions>) {
+    this.handleOptions(option || {});
     const div = handleDivElement(element);
     if (!div) throw new Error('请传入需要绑定的 div 元素');
-    this.handleOptions(option || {});
-    // 初始化 div
-    this.divDom = div;
-    this.divDom.innerHTML = ''; // 清空内容
-    this.divDom.style.padding = '0'; // 清空边距防止定位偏移
-    this.divDom.style.position = 'relative'; // 添加定位
-    const { offsetWidth, offsetHeight } = this.divDom;
-    this.canvasBackdrop = createCanvas(offsetWidth, offsetHeight, this.opt.ratio);
-    this.canvas = createCanvas(offsetWidth, offsetHeight, this.opt.ratio, true);
-    this.divDom.append(this.canvasBackdrop, this.canvas);
-    //
-    this.cursorMoveEvent = new CursorMoveEvent(this.divDom, this.handleMoveEvent.bind(this), this.opt.delay);
-  }
-
-  private handleMoveEvent(keys: 'set' | 'end', point?: Point) {
-    if (keys === 'end') {
-      // 结束绘画
-    } else {
-      // 开始绘画
-    }
-    console.log(keys, point);
+    div.innerHTML = ''; // 清空内容
+    div.style.padding = '0'; // 清空边距防止定位偏移
+    div.style.position = 'relative'; // 添加定位
+    // 画布托管
+    this.canvasLayers = new CanvasLayer(div, this.opt);
+    // 光标托管
+    this.cursorMoveEvent = new CursorMoveEvent(div, this.canvasLayers, this.opt);
   }
 
   public undo() {
@@ -56,6 +40,8 @@ export class CreateCanvas {
     this.maxStack = option.maxStack || 10;
     this.distance = option.distance || 10;
     this.optimize = option.optimize || 0.5;
+    // 特殊的
+    this.opt.ratio = option.ratio || 1;
   }
 
   get distance() {
@@ -67,6 +53,9 @@ export class CreateCanvas {
       this.error.warn('数值过大可能影响用户体验');
     }
     this.opt.distance = value;
+    if (this.cursorMoveEvent) {
+      this.cursorMoveEvent.delay = value;
+    }
   }
 
   get delay() {
@@ -79,7 +68,7 @@ export class CreateCanvas {
     }
     this.opt.delay = value;
     if (this.cursorMoveEvent) {
-      this.cursorMoveEvent.setDelay = value;
+      this.cursorMoveEvent.delay = value;
     }
   }
 
