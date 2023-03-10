@@ -25,11 +25,11 @@ export class CreateCanvas {
   }
 
   public undo() {
-    console.log('undo');
+    this.canvasLayers.undoHistory();
   }
 
   public redo() {
-    console.log('redo');
+    this.canvasLayers.redoHistory();
   }
 
   private handleOptions(option: Partial<CreateCanvasOptions>) {

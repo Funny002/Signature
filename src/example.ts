@@ -5,7 +5,7 @@ import { limitToRange } from './utils';
 const $ = (element: string) => document.querySelector(element) as HTMLInputElement;
 
 // 绑定快捷键
-const keyboard = new Keyboard(window.document.body);
+const keyboard = new Keyboard(window.document as unknown as HTMLElement);
 
 // 初始化画布
 const canvas = new CreateCanvas('.app-canvas', { delay: 10 });
