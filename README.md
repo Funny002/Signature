@@ -1,4 +1,4 @@
-![./image/icon.png](./image/icon.png)
+![./image/icon.png](./public/image/icon.png)
 
 # Signature
 

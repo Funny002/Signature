@@ -21,6 +21,7 @@ interface CanvasLayerOptions {
 
 interface CursorMoveEventOptions {
   delay: number; // 节流
+  ratio: number;
   distance: number; // 两个点的距离大于才记录
 }
 

@@ -5,6 +5,7 @@ import { CanvasLayer } from './CanvasLayer';
 export class CursorMoveEvent {
   private current?: Point;
   private __distance: number;
+  private readonly __ratio: number;
   private readonly handleFunc: any;
   private readonly dom: HTMLElement;
   private isDrawing: boolean = false;
@@ -13,6 +14,7 @@ export class CursorMoveEvent {
   // 初始化
   constructor(doc: HTMLElement, canvasLayer: CanvasLayer, options: CursorMoveEventOptions) {
     this.dom = doc;
+    this.__ratio = options.ratio;
     this.__distance = options.distance;
     this.handleFunc = canvasLayer.handleMoveEvent.bind(canvasLayer);
     doc.addEventListener('mouseup', this.onMouseUp.bind(this));
@@ -32,8 +34,10 @@ export class CursorMoveEvent {
   }
 
   private handlePointFunc(keys: 'set' | 'end', point: Point) {
+    // 画布大小定位与光标位置有一定的差距
+    point = [point[0] * this.__ratio, point[1] * this.__ratio];
     if (keys === 'end') {
-      this.handleFunc('end', []);
+      this.handleFunc('end', point);
     } else {
       // 过滤掉太近的坐标
       const { current, __distance } = this;
@@ -71,15 +75,15 @@ export class CursorMoveEvent {
   // 松开鼠标左键
   private onMouseUp(e: MouseEvent) {
     if (e.button === 0) { // 检查是否是左键
-      this.handleFunc('end', []);
+      this.handleFunc('end', [e.offsetX, e.offsetY]);
       this.isDrawing = false;
     }
   }
 
   // 光标移出画布
-  private onMouseOut() {
+  private onMouseOut(e: MouseEvent) {
     if (this.isDrawing) {
-      this.handleFunc('end', []);
+      this.handleFunc('end', [e.offsetX, e.offsetY]);
       this.isDrawing = false;
     }
   }

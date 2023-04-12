@@ -59,6 +59,7 @@ export class CanvasLayer {
       }
       this.lastPoint = point;
     } else {
+      console.log('handleMoveEvent', point);
       // 处理数据并添加到历史
       this.handleAddHistory();
       this.lastPoint = undefined;
@@ -67,12 +68,12 @@ export class CanvasLayer {
   }
 
   // 绘画曲线
-  private drawCurve(last: Point, present: Point) {
+  private drawCurve(last: Point, present: Point, state = true) {
     const { optimize, size } = this.opt;
     const record = primaryBessel(last, present, optimize); // a1
     const lastRecord = this.recordPoint;
     // 初始线
-    if (!lastRecord) {
+    if (!lastRecord || !state) {
       const long = getPointDistance(last, record);
       for (let i = 0, t = 1 / long; i < long; i++) { // 绘画
         this.drawPoint(primaryBessel(last, record, t * i), size);

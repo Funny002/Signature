@@ -8,7 +8,7 @@ const $ = (element: string) => document.querySelector(element) as HTMLInputEleme
 const keyboard = new Keyboard(window.document as unknown as HTMLElement);
 
 // 初始化画布
-const canvas = new CreateCanvas('.app-canvas', { delay: 10 });
+const canvas = new CreateCanvas('.app-canvas', { delay: 10, ratio: 2 });
 
 // 快捷键 - 撤销
 keyboard.bind('ControlLeft+KeyZ', () => canvas.undo());
